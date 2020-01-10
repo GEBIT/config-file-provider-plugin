@@ -110,8 +110,15 @@ public class MavenToolchainsConfig extends Config {
             	return null;
             }
 
-            Jenkins jenkins = Jenkins.get();
-            List<JDK> jdks = jenkins.getJDKs();
+            List<JDK> jdks = Jenkins.get().getJDKs();
+            if (jdks.isEmpty()) {
+            	return fileContent;
+            }
+            
+            return replaceJDKHomesIn(fileContent, jdks, configFile, build, listener);
+        }
+
+		private String replaceJDKHomesIn(String fileContent, List<JDK> jdks, Config configFile, Run<?, ?> build, TaskListener listener) throws IOException {
             List<String> unmatchedJDKs = new ArrayList<>(jdks.size());
             try {
             	Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(fileContent)));
@@ -150,8 +157,8 @@ public class MavenToolchainsConfig extends Config {
             	return writer.toString();
             } catch (SAXException | ParserConfigurationException | TransformerException | XPathExpressionException exc) {
             	throw new IOException("Unable to generate toolchains.xml " + configFile, exc);
-            }
-        }
+            }		
+		}
 
 		private Element getOrCreateChildElement(Document doc, Element parent, String elementName) {
         	NodeList configurationList = parent.getElementsByTagName(elementName);
