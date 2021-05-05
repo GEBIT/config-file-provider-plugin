@@ -2,8 +2,11 @@ package org.jenkinsci.plugins.configfiles.maven.job;
 
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.model.Item;
 import hudson.model.ItemGroup;
 import hudson.model.TaskListener;
+import hudson.security.AccessControlled;
+import hudson.security.Permission;
 import hudson.slaves.WorkspaceList;
 import hudson.model.AbstractBuild;
 
@@ -14,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import hudson.util.ListBoxModel;
+import jenkins.model.Jenkins;
 import jenkins.mvn.GlobalSettingsProvider;
 import jenkins.mvn.GlobalSettingsProviderDescriptor;
 
@@ -28,6 +32,7 @@ import org.kohsuke.stapler.AncestorInPath;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials;
+import org.kohsuke.stapler.QueryParameter;
 
 /**
  * This provider delivers the global settings.xml to the job during job/project execution. <br>
@@ -110,7 +115,7 @@ public class MvnGlobalSettingsProvider extends GlobalSettingsProvider {
                             build.addAction(new CleanTempFilesAction(configurationFile.getRemote()));
                             return configurationFile;
                         } else {
-                            listener.getLogger().println("ERROR: can't supply maven settings, workspace is null / slave seems not connected...");
+                            listener.getLogger().println("ERROR: can't supply maven settings, workspace is null / agent seems not connected...");
                         }
                     } catch (Exception e) {
                         throw new IllegalStateException("the global settings.xml could not be supplied for the current build: " + e.getMessage());
@@ -130,11 +135,20 @@ public class MvnGlobalSettingsProvider extends GlobalSettingsProvider {
             return "provided global settings.xml";
         }
 
-        public ListBoxModel doFillSettingsConfigIdItems(@AncestorInPath ItemGroup context) {
+        public ListBoxModel doFillSettingsConfigIdItems(@AncestorInPath ItemGroup context, @AncestorInPath Item project, @QueryParameter String settingsConfigId) {
+            Permission permToCheck = project == null ? Jenkins.ADMINISTER : Item.EXTENDED_READ;
+            AccessControlled contextToCheck = project == null ? Jenkins.get() : project;
+
             ListBoxModel items = new ListBoxModel();
             items.add("please select", "");
+
+            if (!contextToCheck.hasPermission(permToCheck)) {
+                items.add(new ListBoxModel.Option("current", settingsConfigId, true)); // we just add what they send
+                return items;
+            }
+            
             for (Config config : ConfigFiles.getConfigsInContext(context, GlobalMavenSettingsConfigProvider.class)) {
-                items.add(config.name, config.id);
+                items.add(new ListBoxModel.Option(config.name, config.id, config.id.equals(settingsConfigId)));
             }
             return items;
         }
