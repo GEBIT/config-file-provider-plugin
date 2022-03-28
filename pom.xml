@@ -31,6 +31,7 @@
         <jenkins.version>2.235.5</jenkins.version>
         <java.level>8</java.level>
         <hpi.compatibleSinceVersion>2.15</hpi.compatibleSinceVersion>
+        <version.build>3.2.1-GBLD-1099-SNAPSHOT</version.build>
     </properties>
 
     <developers>
@@ -240,4 +241,18 @@
             </snapshots>
         </pluginRepository>
     </pluginRepositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.repaint.maven</groupId>
+                <artifactId>tiles-maven-plugin</artifactId>
+                <configuration>
+                    <tiles combine.children="append">
+                        <tile>de.gebit.build.tile:build:${version.build}</tile>
+                    </tiles>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
