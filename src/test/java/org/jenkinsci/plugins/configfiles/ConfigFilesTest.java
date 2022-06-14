@@ -3,7 +3,6 @@ package org.jenkinsci.plugins.configfiles;
 import hudson.model.Item;
 import hudson.model.ItemGroup;
 import jenkins.model.Jenkins;
-import org.acegisecurity.AccessDeniedException;
 import org.jenkinsci.lib.configprovider.model.Config;
 import org.jenkinsci.plugins.configfiles.custom.CustomConfig;
 import org.junit.Assert;
@@ -11,8 +10,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.TestExtension;
+import org.springframework.security.access.AccessDeniedException;
 
-import javax.annotation.CheckForNull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
