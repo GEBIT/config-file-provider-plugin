@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>config-file-provider</artifactId>
-    <version>3.10.0</version>
+    <version>3.10.0-gebit2-SNAPSHOT</version>
 
     <packaging>hpi</packaging>
 
@@ -33,7 +33,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <jenkins.version>2.303.3</jenkins.version>
         <hpi.compatibleSinceVersion>2.15</hpi.compatibleSinceVersion>
-        <version.build>3.2.1-GBLD-1099-SNAPSHOT</version.build>
+        <version.build>3.3.0</version.build>
     </properties>
 
     <developers>
