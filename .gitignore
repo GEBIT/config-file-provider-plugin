@@ -3,6 +3,7 @@
 .project
 .settings/
 .factorypath
+eclipse-target/
 
 # Intellij
 .idea/
