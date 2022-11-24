@@ -8,20 +8,16 @@
 		<mirror>
 			<id>Nexus</id>
 			<name>Nexus Public Mirror</name>
-			<url>https://gebit-nexus.local.gebit.de/content/groups/public</url>
+			<url>http://gebit-nexus.local.gebit.de/content/groups/public</url>
 			<mirrorOf>central</mirrorOf>
 		</mirror>
 	</mirrors>
 
-	<!-- you will need a matching ~/.m2/security-settings.xml -->
 	<servers>
+		<!-- For your own project replace the server ID and environment variables, e.g. xyz-relases and NEXUS_XYZ_USERNAME) -->
+		<!-- see https://wiki.gebit.de/display/GBLD/Deployment+password+management for details -->
 		<server>
 			<id>gebit-releases</id>
-			<username>${env.NEXUS_GEBIT_BUILD_USERNAME}</username>
-			<password>${env.NEXUS_GEBIT_BUILD_PASSWORD}</password>
-		</server>
-		<server>
-			<id>gebit-integration</id>
 			<username>${env.NEXUS_GEBIT_BUILD_USERNAME}</username>
 			<password>${env.NEXUS_GEBIT_BUILD_PASSWORD}</password>
 		</server>
@@ -30,10 +26,8 @@
 			<username>${env.NEXUS_GEBIT_BUILD_USERNAME}</username>
 			<password>${env.NEXUS_GEBIT_BUILD_PASSWORD}</password>
 		</server>
-
-		<!-- Defines the credentials for uploading of 3th party artifacts to the central repository -->
 		<server>
-			<id>thirdparty</id>
+			<id>gebit-integration</id>
 			<username>${env.NEXUS_GEBIT_BUILD_USERNAME}</username>
 			<password>${env.NEXUS_GEBIT_BUILD_PASSWORD}</password>
 		</server>
@@ -43,23 +37,9 @@
 			<id>gebit-maven-site</id>
 			<username>jenkins</username>
 		</server>
-
-		<!-- Jenkins repository for upstream builds need preemptive authentication. -->
-		<server>
-			<id>jenkins</id>
-			<username>${env.NEXUS_GEBIT_BUILD_USERNAME}</username>
-			<password>${env.NEXUS_GEBIT_BUILD_PASSWORD}</password>
-			<configuration>
-				<httpConfiguration>
-					<all>
-						<usePreemptive>true</usePreemptive>
-					</all>
-				</httpConfiguration>
-			</configuration>
-		</server>
 	</servers>
 
- 	<profiles>
+	<profiles>
 		<profile>
 			<id>nexus-profile</id>
 			<repositories>
@@ -141,40 +121,6 @@
 					<url>https://gebit-nexus.local.gebit.de/content/groups/snapshots</url>
 					<releases>
 						<enabled>false</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</pluginRepository>
-			</pluginRepositories>
-		</profile>
-
-		<!-- Order is important here: this must be last -->
-		<profile>
-			<id>jenkins-maven-upstream</id>
-			<activation>
-				<property>
-					<name>env.Jenkins.Repository</name>
-				</property>
-			</activation>
-			<repositories>
-				<repository>
-					<id>jenkins</id>
-					<url>${env.Jenkins.Repository}</url>
-					<releases>
-						<enabled>true</enabled>
-					</releases>
-					<snapshots>
-						<enabled>true</enabled>
-					</snapshots>
-				</repository>
-			</repositories>
-			<pluginRepositories>
-				<pluginRepository>
-					<id>jenkins</id>
-					<url>${env.Jenkins.Repository}</url>
-					<releases>
-						<enabled>true</enabled>
 					</releases>
 					<snapshots>
 						<enabled>true</enabled>
