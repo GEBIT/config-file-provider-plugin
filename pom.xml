@@ -306,6 +306,7 @@
 	                <mergeTarget>${tiles.mergeTarget}</mergeTarget>
 	                <tiles combine.children="append">
 	                    <tile>de.gebit.build.tile:build:${version.build}</tile>
+	                    <tile>de.gebit.build.tile:reports:${version.build}</tile>
 	                    <!-- hier can be added other tiles to be used -->
 	                </tiles>
 	            </configuration>
