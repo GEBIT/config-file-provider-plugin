@@ -259,6 +259,16 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+	      <id>incrementals</id>
+	      <url>https://repo.jenkins-ci.org/incrementals/</url>
+	      <releases>
+	      	<enabled>false</enabled>
+	      </releases>
+	      <snapshots>
+	      	<enabled>false</enabled>
+	      </snapshots>
+	    </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
@@ -271,6 +281,16 @@
                 <enabled>false</enabled>
             </snapshots>
         </pluginRepository>
+        <pluginRepository>
+	      <id>incrementals</id>
+	      <url>https://repo.jenkins-ci.org/incrementals/</url>
+	      <releases>
+	      	<enabled>false</enabled>
+	      </releases>
+	      <snapshots>
+	      	<enabled>false</enabled>
+	      </snapshots>
+	    </pluginRepository>
     </pluginRepositories>
 
     <build>
