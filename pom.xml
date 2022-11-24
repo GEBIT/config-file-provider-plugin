@@ -50,6 +50,9 @@
 	    <tiles.mergeTarget>${tiles.applyBefore}</tiles.mergeTarget>
 	    
 	    <flow.skipReleaseBranchMerge>true</flow.skipReleaseBranchMerge>
+	    
+		<version.java>${java.version}</version.java>
+		<java.version>11</java.version>
     </properties>
 
     <developers>
