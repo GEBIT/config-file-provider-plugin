@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>config-file-provider</artifactId>
-    <version>${revision}${changelist}</version>
+    <version>3.11.1-gebit1</version>
 
     <packaging>hpi</packaging>
 
