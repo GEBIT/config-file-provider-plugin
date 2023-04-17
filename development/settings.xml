@@ -8,7 +8,7 @@
 		<mirror>
 			<id>Nexus</id>
 			<name>Nexus Public Mirror</name>
-			<url>http://gebit-nexus.local.gebit.de/content/groups/public</url>
+			<url>https://gebit-nexus.local.gebit.de/content/groups/public</url>
 			<mirrorOf>central</mirrorOf>
 		</mirror>
 	</mirrors>
@@ -128,9 +128,58 @@
 				</pluginRepository>
 			</pluginRepositories>
 		</profile>
+
+		<profile>
+			<id>disabled-jenkins-ci-repo-profile</id>
+			<repositories>
+				<repository>
+					<id>repo.jenkins-ci.org</id>
+					<url>none</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>incrementals</id>
+					<url>none</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>repo.jenkins-ci.org</id>
+					<url>none</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+				<pluginRepository>
+					<id>incrementals</id>
+					<url>none</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>
 	</profiles>
 
 	<activeProfiles>
 		<activeProfile>nexus-profile</activeProfile>
+		<activeProfile>disabled-jenkins-ci-repo-profile</activeProfile>
 	</activeProfiles>
 </settings>
