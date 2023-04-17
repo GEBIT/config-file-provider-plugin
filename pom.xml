@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>config-file-provider</artifactId>
-    <version>3.11.1</version>
+    <version>${revision}${changelist}</version>
 
     <packaging>hpi</packaging>
 
@@ -33,7 +33,7 @@
         <version.gebit-forked>1.0.2</version.gebit-forked>
         <!-- GEBIT: end -->
 
-        <revision>3.12</revision>
+        <revision>3.11.1</revision>
         <changelist>-SNAPSHOT</changelist>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
         <maven.javadoc.skip>true</maven.javadoc.skip>
