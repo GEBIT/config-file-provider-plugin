@@ -27,32 +27,18 @@
     <description>Ability to provide configuration files (e.g. settings.xml for maven, XML, groovy, custom files,...) loaded through the UI which will be copied to the job workspace</description>
 
     <properties>
+        <!-- GEBIT: versions to be used for gebit-build support -->
+        <version.tiles>2.8-gebit38</version.tiles>
+        <version.gebit-build-extension>1.2.2</version.gebit-build-extension>
+        <version.gebit-forked>1.0.2</version.gebit-forked>
+        <!-- GEBIT: end -->
+
         <revision>3.12</revision>
         <changelist>-SNAPSHOT</changelist>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <jenkins.version>2.346.1</jenkins.version>
         <hpi.compatibleSinceVersion>2.15</hpi.compatibleSinceVersion>
-        <!-- Version of the project (same as in version tag). It will be updated automatically by GEBIT flow. -->
-	    <version.config-file-provider>3.11.1</version.config-file-provider>
-	    <version.property>version.config-file-provider</version.property>
-	    
-	    <project.build-name>config-file-provider</project.build-name>
-	    <project.jira>DINF</project.jira>
-	    
-	    <!-- Version of gebit-build to be used -->
-	    <version.build>3.4.1-I377</version.build>
-	    <version.gebit-build-extension>1.2.2</version.gebit-build-extension>
-	    <version.tiles>2.8-gebit37</version.tiles>
-	    <version.gitflow-maven-plugin>2.4.6-I152</version.gitflow-maven-plugin>
-	    
-	    <tiles.applyBefore>org.jenkins-ci.plugins:config-file-provider</tiles.applyBefore>
-	    <tiles.mergeTarget>${tiles.applyBefore}</tiles.mergeTarget>
-	    
-	    <flow.skipReleaseBranchMerge>true</flow.skipReleaseBranchMerge>
-	    
-		<version.java>${java.version}</version.java>
-		<java.version>11</java.version>
     </properties>
 
     <developers>
@@ -295,27 +281,28 @@
 
     <build>
         <plugins>
+            <!-- GEBIT: Tiles -->
             <plugin>
-	            <groupId>io.repaint.maven</groupId>
-	            <artifactId>tiles-maven-plugin</artifactId>
-	            <version>${version.tiles}</version>
-	            <extensions>true</extensions>
-	            <configuration>
-	                <applyBefore>${tiles.applyBefore}</applyBefore>
-	                <mergeTarget>${tiles.mergeTarget}</mergeTarget>
-	                <tiles combine.children="append">
-	                    <tile>de.gebit.build.tile:build:${version.build}</tile>
-	                    <!-- hier can be added other tiles to be used -->
-	                </tiles>
-	            </configuration>
-        	</plugin>
+                <groupId>io.repaint.maven</groupId>
+                <artifactId>tiles-maven-plugin</artifactId>
+                <version>${version.tiles}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <tiles>
+                        <tile>de.gebit.build.forked.tile:jenkins-plugin:${version.gebit-forked}</tile>
+                    </tiles>
+                </configuration>
+            </plugin>
+            <!-- GEBIT: end -->
         </plugins>
+        <!-- GEBIT: Extensions -->
         <extensions>
-	        <extension>
-	            <groupId>de.gebit.build.maven</groupId>
-	            <artifactId>gebit-build-extension</artifactId>
-	            <version>${version.gebit-build-extension}</version>
-	        </extension>
-    	</extensions>
+            <extension>
+                <groupId>de.gebit.build.maven</groupId>
+                <artifactId>gebit-build-extension</artifactId>
+                <version>${version.gebit-build-extension}</version>
+            </extension>
+        </extensions>
+        <!-- GEBIT: end -->
     </build>
 </project>
