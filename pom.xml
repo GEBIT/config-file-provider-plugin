@@ -32,6 +32,7 @@
         <version.tiles>2.8-gebit38</version.tiles>
         <version.gebit-build-extension>1.2.2</version.gebit-build-extension>
         <version.gebit-forked>1.0.2</version.gebit-forked>
+	<version.maven-enforcer-plugin>3.3.0</version.maven-enforcer-plugin> <!-- temporary workaround until GBLD-1359 is fixed -->
         <!-- GEBIT: end -->
 
         <changelist>999999-SNAPSHOT</changelist>
@@ -263,6 +264,9 @@
                 <configuration>
                     <tiles>
                         <tile>de.gebit.build.forked.tile:jenkins-plugin:${version.gebit-forked}</tile>
+			<tile>!de.gebit.build.tile:enforce-maven:3.5.3</tile>
+			<tile>!de.gebit.build.tile:enforce-no-integrations-on-release:3.5.3</tile>
+			<tile>!de.gebit.build.tile:enforce-no-snapshots-on-release:3.5.3</tile>
                     </tiles>
                 </configuration>
             </plugin>
