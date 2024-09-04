@@ -71,7 +71,7 @@ import org.xml.sax.SAXException;
 public class MavenToolchainsConfig extends Config {
     private static final long serialVersionUID = 1L;
 
-    public Boolean removeUnavailableJdkToolchains = removeUnavailableJdkToolchainsDefault;
+    private Boolean removeUnavailableJdkToolchains = removeUnavailableJdkToolchainsDefault;
     public static final Boolean removeUnavailableJdkToolchainsDefault = Boolean.FALSE;
 
     @DataBoundConstructor
