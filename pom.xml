@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>config-file-provider</artifactId>
-    <version>${changelist}</version>
+    <version>959.vcff671a_4518b_-gebit3</version>
 
     <packaging>hpi</packaging>
 
