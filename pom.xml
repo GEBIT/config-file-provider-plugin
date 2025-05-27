@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>4.87</version>
+        <version>5.11</version>
         <relativePath />
     </parent>
 
@@ -37,7 +37,9 @@
 
         <changelist>999999-SNAPSHOT</changelist>
         <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
-        <jenkins.version>2.414.3</jenkins.version>
+        <!-- https://www.jenkins.io/doc/developer/plugin-development/choosing-jenkins-baseline/ -->
+        <jenkins.baseline>2.479</jenkins.baseline>
+        <jenkins.version>${jenkins.baseline}.1</jenkins.version>
         <hpi.compatibleSinceVersion>2.15</hpi.compatibleSinceVersion>
         <!-- Needed to use Jenkins.MANAGE -->
         <useBeta>true</useBeta>
@@ -64,8 +66,8 @@
         <dependencies>
             <dependency>
                 <groupId>io.jenkins.tools.bom</groupId>
-                <artifactId>bom-2.414.x</artifactId>
-                <version>2982.vdce2153031a_0</version>
+                <artifactId>bom-${jenkins.baseline}.x</artifactId>
+                <version>4023.va_eeb_b_4e45f07</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
