@@ -37,6 +37,8 @@ import org.jvnet.hudson.test.BuildWatcher;
 import org.jvnet.hudson.test.JenkinsRule;
 
 import hudson.model.JDK;
+import hudson.slaves.DumbSlave;
+import hudson.tools.ToolLocationNodeProperty;
 import jenkins.model.Jenkins;
 
 public class MavenToolchainsConfigTest {
@@ -117,6 +119,44 @@ public class MavenToolchainsConfigTest {
     @Test
     public void withoutUnavailableJDKRemoval() throws Exception {
         testUnavailableJDKRemoval(false);
+    }
+
+    @Test
+    public void withJDKSubstitutionOnNodeWithOverride() throws Exception {
+        // Verify that node-specific tool location overrides are used when generating
+        // the toolchains.xml, rather than the globally configured JDK home paths.
+        String fileId = "m2toolchains";
+        String jdk8Name = "JDK8";
+        String globalJdk8Home = "/usr/lib/jvm/java-8-openjdk-global";
+        String nodeJdk8Home = "/usr/lib/jvm/java-8-openjdk-node";
+
+        List<JDK> jdks = new ArrayList<>();
+        JDK jdk8 = new JDK(jdk8Name, globalJdk8Home);
+        jdks.add(jdk8);
+        Jenkins.get().setJDKs(jdks);
+
+        // Create an agent with a ToolLocationNodeProperty that overrides the JDK path
+        DumbSlave agent = r.createOnlineSlave();
+        JDK.DescriptorImpl jdkDescriptor = Jenkins.get().getDescriptorByType(JDK.DescriptorImpl.class);
+        agent.getNodeProperties().add(new ToolLocationNodeProperty(
+                new ToolLocationNodeProperty.ToolLocation(jdkDescriptor, jdk8Name, nodeJdk8Home)));
+
+        String toolchainsContents = String.format(
+                "<toolchains><toolchain><type>jdk</type><provides><version>1.8</version><id>%1$s</id></provides><configuration><jdkHome>undefined</jdkHome></configuration></toolchain></toolchains>\n",
+                jdk8Name);
+        GlobalConfigFiles.get().save(new MavenToolchainsConfig(fileId, "m2toolchains", "", toolchainsContents));
+
+        WorkflowJob p = r.createProject(WorkflowJob.class, "p");
+        // Run the pipeline on the agent node so that its tool location override is applied
+        p.setDefinition(new CpsFlowDefinition(
+                String.format("node('%1$s') {configFileProvider([configFile(fileId: '%2$s', variable: 'SETTINGS')]) {echo readFile(env.SETTINGS)}}",
+                        agent.getNodeName(), fileId),
+                true));
+        WorkflowRun b1 = r.buildAndAssertSuccess(p);
+        // The node-specific override path must appear in the generated toolchains.xml
+        r.assertLogContains(nodeJdk8Home, b1);
+        // The global (non-overridden) path must NOT appear
+        r.assertLogNotContains(globalJdk8Home, b1);
     }
 
     private void testUnavailableJDKRemoval(boolean remove) throws Exception {

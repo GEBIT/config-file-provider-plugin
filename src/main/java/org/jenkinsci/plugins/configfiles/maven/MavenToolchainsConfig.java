@@ -131,23 +131,38 @@ public class MavenToolchainsConfig extends Config {
                 return fileContent;
             }
 
-            return replaceJDKHomesIn(fileContent, jdks, (MavenToolchainsConfig) configFile, build, workDir, listener);
+            // Determine the node where the build is running so that node-specific tool
+            // location overrides (e.g. ToolLocationNodeProperty) are respected when
+            // resolving JDK home paths.  Fall back to null (= global paths) when no
+            // node context is available.
+            Node buildNode = null;
+            if (workDir != null) {
+                Computer computer = workDir.toComputer();
+                if (computer != null) {
+                    buildNode = computer.getNode();
+                }
+            }
+
+            return replaceJDKHomesIn(fileContent, jdks, (MavenToolchainsConfig) configFile, build, listener, buildNode);
         }
 
-        private String replaceJDKHomesIn(String fileContent, List<JDK> jdks, MavenToolchainsConfig configFile, Run<?, ?> build, FilePath workDir, TaskListener listener) throws IOException {
+        private String replaceJDKHomesIn(String fileContent, List<JDK> jdks, MavenToolchainsConfig configFile, Run<?, ?> build, TaskListener listener, Node buildNode) throws IOException {
             List<String> unmatchedJDKs = new ArrayList<>(jdks.size());
             try {
                 Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(fileContent)));
                 XPath xpath = XPathFactory.newInstance().newXPath();
 
                 for (JDK jdk : jdks) {
+                    // Resolve the JDK installation for the specific node so that any
+                    // per-node tool location overrides are applied to the home path.
+                    JDK resolvedJdk = (buildNode != null) ? jdk.forNode(buildNode, listener) : jdk;
                     String jdkName = jdk.getName();
                     String selector = String.format("/toolchains/toolchain[./type[text()='jdk']/../provides/id[text()='%1$s']]", jdkName);
                     Element existingToolChain = (Element) xpath.evaluate(selector, doc, XPathConstants.NODE);
                     if (existingToolChain != null) {
                         Element configurationElement = getOrCreateChildElement(doc, existingToolChain, "configuration");
                         Element jdkHomeElement = getOrCreateChildElement(doc, configurationElement, "jdkHome");
-                        jdkHomeElement.setTextContent(jdk.getHome());
+                        jdkHomeElement.setTextContent(resolvedJdk.getHome());
                     } else {
                         unmatchedJDKs.add(jdkName);
                     }
@@ -165,7 +180,7 @@ public class MavenToolchainsConfig extends Config {
                 }
 
                 if (configFile.getRemoveUnavailableJdkToolchains()) {
-                    removeUnavailableJdkToolchains(doc, configFile, build, workDir, listener);
+                    removeUnavailableJdkToolchains(doc, configFile, build, listener, buildNode);
                 }
 
                 // save the result
@@ -180,12 +195,7 @@ public class MavenToolchainsConfig extends Config {
             }
         }
 
-        private void removeUnavailableJdkToolchains(Document doc, MavenToolchainsConfig configFile, Run<?, ?> build, FilePath workDir, TaskListener listener) throws XPathExpressionException, DOMException, IOException, InterruptedException {
-            Node buildNode = null;
-            Computer computer = workDir.toComputer();
-            if (computer != null) {
-                buildNode = computer.getNode();
-            }
+        private void removeUnavailableJdkToolchains(Document doc, MavenToolchainsConfig configFile, Run<?, ?> build, TaskListener listener, Node buildNode) throws XPathExpressionException, DOMException, IOException, InterruptedException {
             if (buildNode == null) {
                 buildNode = Jenkins.get();
             }
