@@ -30,27 +30,20 @@ import org.jenkinsci.plugins.configfiles.GlobalConfigFiles;
 import org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.jvnet.hudson.test.BuildWatcher;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
 import hudson.model.JDK;
 import hudson.slaves.DumbSlave;
 import hudson.tools.ToolLocationNodeProperty;
 import jenkins.model.Jenkins;
 
-public class MavenToolchainsConfigTest {
-
-    @ClassRule
-    public static BuildWatcher buildWatcher = new BuildWatcher();
-
-    @Rule
-    public JenkinsRule r = new JenkinsRule();
+@WithJenkins
+class MavenToolchainsConfigTest {
 
     @Test
-    public void withoutJDKSubstitution() throws Exception {
+    void withoutJDKSubstitution(JenkinsRule r) throws Exception {
         // Smokes:
         String fileId = "m2toolchains";
         String jdk8Name = "SeparateJDK"; // not referenced in toolchain, so not substituted
@@ -74,7 +67,7 @@ public class MavenToolchainsConfigTest {
     }
 
     @Test
-    public void withJDKSubstitution() throws Exception {
+    void withJDKSubstitution(JenkinsRule r) throws Exception {
         // Smokes:
         String fileId = "m2toolchains";
         String jdk8Name = "JDK8"; // referenced in toolchain
@@ -112,17 +105,17 @@ public class MavenToolchainsConfigTest {
     }
 
     @Test
-    public void withUnavailableJDKRemoval() throws Exception {
-        testUnavailableJDKRemoval(true);
+    void withUnavailableJDKRemoval(JenkinsRule r) throws Exception {
+        testUnavailableJDKRemoval(r, true);
     }
 
     @Test
-    public void withoutUnavailableJDKRemoval() throws Exception {
-        testUnavailableJDKRemoval(false);
+    void withoutUnavailableJDKRemoval(JenkinsRule r) throws Exception {
+        testUnavailableJDKRemoval(r, false);
     }
 
     @Test
-    public void withJDKSubstitutionOnNodeWithOverride() throws Exception {
+    void withJDKSubstitutionOnNodeWithOverride(JenkinsRule r) throws Exception {
         // Verify that node-specific tool location overrides are used when generating
         // the toolchains.xml, rather than the globally configured JDK home paths.
         String fileId = "m2toolchains";
@@ -159,7 +152,7 @@ public class MavenToolchainsConfigTest {
         r.assertLogNotContains(globalJdk8Home, b1);
     }
 
-    private void testUnavailableJDKRemoval(boolean remove) throws Exception {
+    private void testUnavailableJDKRemoval(JenkinsRule r, boolean remove) throws Exception {
         // Smokes:
         String fileId = "m2toolchains";
         String jdk8Name = "JDK8"; // referenced in toolchains.xml, but certainly does not exist in filesystem
