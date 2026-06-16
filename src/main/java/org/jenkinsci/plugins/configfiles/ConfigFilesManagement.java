@@ -180,7 +180,7 @@ public class ConfigFilesManagement extends ManagementLink implements ConfigFiles
         Config config = store.getById(configId);
         req.setAttribute("contentType", config.getProvider().getContentType());
         req.setAttribute("config", config);
-        req.getView(this, JELLY_RESOURCES_PATH + "show.jelly").forward(req, rsp);
+        req.getView(this, "show.jelly").forward(req, rsp);
     }
 
     /**
@@ -199,7 +199,7 @@ public class ConfigFilesManagement extends ManagementLink implements ConfigFiles
         req.setAttribute("contentType", config.getProvider().getContentType());
         req.setAttribute("config", config);
         req.setAttribute("provider", config.getProvider());
-        req.getView(this, JELLY_RESOURCES_PATH + "edit.jelly").forward(req, rsp);
+        req.getView(this, "edit.jelly").forward(req, rsp);
     }
 
     /**
@@ -231,7 +231,7 @@ public class ConfigFilesManagement extends ManagementLink implements ConfigFiles
             checkPermission(Jenkins.MANAGE);
             req.setAttribute("providers", ConfigProvider.all());
             req.setAttribute("configId", configId);
-            req.getView(this, JELLY_RESOURCES_PATH + "selectprovider.jelly").forward(req, rsp);
+            req.getView(this, "selectprovider.jelly").forward(req, rsp);
             return;
         }
 
@@ -251,14 +251,14 @@ public class ConfigFilesManagement extends ManagementLink implements ConfigFiles
         config.setProviderId(provider.getProviderId());
         req.setAttribute("config", config);
 
-        req.getView(this, JELLY_RESOURCES_PATH + "edit.jelly").forward(req, rsp);
+        req.getView(this, "edit.jelly").forward(req, rsp);
     }
 
     public void doSelectProvider(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         // permission handled in getTarget
         req.setAttribute("providers", ConfigProvider.all());
         req.setAttribute("configId", UUID.randomUUID().toString());
-        req.getView(this, JELLY_RESOURCES_PATH + "selectprovider.jelly").forward(req, rsp);
+        req.getView(this, "selectprovider.jelly").forward(req, rsp);
     }
 
     private void checkPermission(Permission permission) {

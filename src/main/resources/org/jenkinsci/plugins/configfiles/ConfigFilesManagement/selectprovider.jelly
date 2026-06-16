@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2011, Dominik Bartholdi
+Copyright (c) 2026, Antoine Neveux
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,9 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:cf="/lib/configfiles">
-	<l:settings-subpage title="${%Config File Management}" permission="${app.MANAGE}">
-        <div class="jenkins-buttons-row" style="margin: 1rem 0 1.5rem 0">
-            <a href="selectProvider" class="jenkins-button jenkins-button--primary">
-                <l:icon src="symbol-add" />
-                ${%Add a new Config}
-            </a>
-        </div>
-        <cf:configfiles groupedConfigs="${it.groupedConfigs}" />
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:cf="/lib/configfiles">
+	<l:settings-subpage title="${%New configuration}" permission="${app.MANAGE}" noDefer="true">
+		<j:set var="configId" value="${configId}"/>
+		<cf:selectprovider providers="${it.providers}"/>
 	</l:settings-subpage>
 </j:jelly>
